@@ -70,6 +70,18 @@ body.dark-mode {
     margin-right: 0.5rem;
 }
 
+.logo-dark {
+    display: none;
+}
+
+body.dark-mode .logo-light {
+    display: none;
+}
+
+body.dark-mode .logo-dark {
+    display: block;
+}
+
 .logo-text {
     font-size: 1.5rem;
     font-weight: 600;
