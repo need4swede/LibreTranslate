@@ -1,8 +1,8 @@
 services:
   # Init container to set up volume permissions
-  libretranslate-init:
+  nexus-init:
     image: busybox
-    container_name: libretranslate-init
+    container_name: nexus-init
     volumes:
       - libretranslate_api_keys:/app/db
       - libretranslate_models:/home/libretranslate/.local
@@ -16,14 +16,12 @@ services:
         echo 'Volume permissions set successfully'
       "
 
-  libretranslate:
-    container_name: libretranslate
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
+  nexus:
+    container_name: nexus
+    image: need4swede/nexus:latest
     restart: unless-stopped
     depends_on:
-      libretranslate-init:
+      nexus-init:
         condition: service_completed_successfully
     ports:
       - "7756:5000"
@@ -39,7 +37,7 @@ services:
       - LT_API_KEYS_DB_PATH=/app/db/api_keys.db # Same result as `db/api_keys.db` or `./db/api_keys.db`
       ## Uncomment these vars and libretranslate_models volume to optimize loading time.
       - LT_UPDATE_MODELS=true
-      - LT_LOAD_ONLY=en,fr
+    #- LT_LOAD_ONLY=en,fr
     volumes:
       - libretranslate_api_keys:/app/db
       # Keep the models in a docker volume, to avoid re-downloading on startup
